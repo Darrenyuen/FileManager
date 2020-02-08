@@ -1,14 +1,14 @@
 package com.yuan.filemanager
 
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
-import android.widget.Button
+import android.view.KeyEvent
+import android.view.View
+import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.yuan.filemanager.utils.Utils
-import org.json.JSONArray
-import org.json.JSONObject
+import com.yuan.filemanager.utils.FileUtil
 import java.io.File
 
 
@@ -16,42 +16,49 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
 
-    private lateinit var test: Button
-    private lateinit var log: Button
+    private lateinit var pathTextView: TextView
+    private lateinit var listView: ListView
+
+    private var mExitTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        test = findViewById(R.id.test)
-        log = findViewById(R.id.log)
-
-        test.setOnClickListener {
-            if (Utils.existSDCard()) Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
-            else Toast.makeText(this, "no", Toast.LENGTH_SHORT).show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   //改变状态栏上元素的颜色
+            this.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
-
-        log.setOnClickListener {
-//            Log.d(TAG, Environment.getExternalStorageDirectory().toString())    ///storage/emulated/0
-//            Log.d(TAG, Environment.getExternalStorageDirectory().absolutePath)  ///storage/emulated/0
-//            Log.d(TAG, Environment.getExternalStorageDirectory().canonicalPath) ///storage/emulated/0
-//            Log.d(TAG, Environment.getExternalStorageState())                   //mounted
-//            Log.d(TAG, Environment.getExternalStorageState())                   //mounted
-
-            getAllFiles()
-        }
-
-    }
-
-    private fun getAllFiles() {
-        val list = mutableListOf("/")
-        while (list.size > 0) {
-            val file = File(list.removeAt(0))
-            if (!file.exists()) continue
-            file.listFiles()?.forEach {it ->
-                Log.d(TAG, it.absolutePath)
-                list.add(it.absolutePath)
+        listView = findViewById(R.id.listView)
+        pathTextView = findViewById(R.id.path)
+        pathTextView.text = "/"
+        listView.adapter = FileItemAdapter(this, R.layout.item_file, FileUtil.getGroupFiles("/").sorted())
+        listView.setOnItemClickListener { adapterView, view, i, l ->
+            val item = adapterView.getItemAtPosition(i)
+            if (File(item.toString()).isDirectory)  {
+                pathTextView.text = item.toString()
+                listView.adapter = FileItemAdapter(this, R.layout.item_file, FileUtil.getGroupFiles(item.toString()).sorted())
+            } else {
+                startActivity(FileUtil.openFile(item.toString()))
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if (!pathTextView.text.toString().equals("/")) {
+            listView.adapter = FileItemAdapter(this, R.layout.item_file, FileUtil.getGroupFiles(File(pathTextView.text.toString()).parent).sorted())
+            pathTextView.text = File(pathTextView.text.toString()).parent
+        }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && pathTextView.text.toString().equals("/")) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show()
+                mExitTime = System.currentTimeMillis()
+            } else {
+                this.finish()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
