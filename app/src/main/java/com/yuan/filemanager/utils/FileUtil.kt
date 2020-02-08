@@ -34,7 +34,7 @@ class FileUtil {
                 "jpg", "gif", "png", "jpeg", "bmp" -> getImageFileIntent(path)
                 "ppt" -> getPPTFileIntent(path)
                 "xls" -> getExcelFileIntent(path)
-                "doc" -> getWordFileIntent(path)
+                "doc", "docx" -> getWordFileIntent(path)
                 "txt" -> getTextFileIntent(path)
                 "pdf" -> getPDFFileIntent(path)
                 "apk" -> getApkFileIntent(path)

@@ -33,7 +33,20 @@ class FileItemAdapter(context: Context, resource: Int, objects: List<String>) :
             viewHolder = view.tag as ViewHolder
         }
         if (File(list[position]).isDirectory) viewHolder.fileIcon?.setImageResource(R.drawable.icon_folder)
-        else viewHolder.fileIcon?.setImageResource(R.drawable.icon_unknowfile)
+        else {
+            when(list[position].substringAfterLast(".")) {
+                "m4a", "mp3", "mid", "xmf", "ogg", "wav" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_musicfile)
+                "mp4", "3gp" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_videofile)
+                "jpg", "gif", "png", "jpeg", "bmp" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_picturefile)
+                "ppt" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_pptfile)
+                "xls" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_excelfile)
+                "doc", "docx" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_wordfile)
+                "txt" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_textfile)
+                "pdf" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_pdffile)
+                "apk" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_apkfile)
+                else -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_unknowfile)
+            }
+        }
         viewHolder.fileName?.text = list[position].substringAfterLast("/")
         return view
     }
