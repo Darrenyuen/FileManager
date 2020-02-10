@@ -3,6 +3,8 @@ package com.yuan.filemanager.utils
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import com.yuan.filemanager.MainActivity
 import java.io.File
 import java.util.*
 
@@ -15,7 +17,7 @@ class FileUtil {
         //获取上级或下级文件列表
         fun getGroupFiles(path: String): MutableList<String> {
             val file = File(path)
-            var list = mutableListOf<String>()
+            val list = mutableListOf<String>()
             file.listFiles()?.forEach { it ->
                 list.add(it.absolutePath)
             }
@@ -38,7 +40,7 @@ class FileUtil {
                 "txt" -> getTextFileIntent(path)
                 "pdf" -> getPDFFileIntent(path)
                 "apk" -> getApkFileIntent(path)
-                else -> getAllIntent(path)
+                else -> getOtherFileIntent()
             }
         }
 
@@ -124,13 +126,8 @@ class FileUtil {
             return intent
         }
 
-        private fun getAllIntent(param: String): Intent {
-            val intent = Intent()
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.action = Intent.ACTION_VIEW
-            val uri = Uri.fromFile(File(param))
-            intent.setDataAndType(uri, "*/*")
-            return intent
+        private fun getOtherFileIntent(): Intent {
+            return Intent().putExtra("other", "other")
         }
     }
 }

@@ -1,13 +1,13 @@
-package com.yuan.filemanager
+package com.yuan.filemanager.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.yuan.filemanager.R
 import java.io.File
 
 /**
@@ -32,12 +32,18 @@ class FileItemAdapter(context: Context, resource: Int, objects: List<String>) :
             view = convertView
             viewHolder = view.tag as ViewHolder
         }
-        if (File(list[position]).isDirectory) viewHolder.fileIcon?.setImageResource(R.drawable.icon_folder)
+        if (File(list[position]).isDirectory) viewHolder.fileIcon?.setImageResource(
+            R.drawable.icon_folder
+        )
         else {
             when(list[position].substringAfterLast(".")) {
-                "m4a", "mp3", "mid", "xmf", "ogg", "wav" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_musicfile)
+                "m4a", "mp3", "mid", "xmf", "ogg", "wav" -> viewHolder.fileIcon?.setImageResource(
+                    R.drawable.icon_musicfile
+                )
                 "mp4", "3gp" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_videofile)
-                "jpg", "gif", "png", "jpeg", "bmp" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_picturefile)
+                "jpg", "gif", "png", "jpeg", "bmp" -> viewHolder.fileIcon?.setImageResource(
+                    R.drawable.icon_picturefile
+                )
                 "ppt" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_pptfile)
                 "xls" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_excelfile)
                 "doc", "docx" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_wordfile)
