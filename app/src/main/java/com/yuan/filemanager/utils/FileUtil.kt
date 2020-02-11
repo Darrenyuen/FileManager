@@ -28,6 +28,7 @@ class FileUtil {
         fun openFile(path: String): Intent? {
             val file = File(path)
             if (!file.exists()) return null
+            if (!file.name.contains(".")) return getOtherFileIntent()
             val suffix = file.name.substringAfterLast(".").toLowerCase(Locale.ROOT)
             Log.d("open file", suffix)
             return when(suffix) {
@@ -35,7 +36,7 @@ class FileUtil {
                 "mp4", "3gp" -> getVideoFileIntent(path)
                 "jpg", "gif", "png", "jpeg", "bmp" -> getImageFileIntent(path)
                 "ppt" -> getPPTFileIntent(path)
-                "xls" -> getExcelFileIntent(path)
+                "xls", "xlsx", "xlsx_tmp" -> getExcelFileIntent(path)
                 "doc", "docx" -> getWordFileIntent(path)
                 "txt" -> getTextFileIntent(path)
                 "pdf" -> getPDFFileIntent(path)

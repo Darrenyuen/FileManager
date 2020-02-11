@@ -45,7 +45,7 @@ class FileItemAdapter(context: Context, resource: Int, objects: List<String>) :
                     R.drawable.icon_picturefile
                 )
                 "ppt" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_pptfile)
-                "xls" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_excelfile)
+                "xls", "xlsx", "xlsx_tmp" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_excelfile)
                 "doc", "docx" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_wordfile)
                 "txt" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_textfile)
                 "pdf" -> viewHolder.fileIcon?.setImageResource(R.drawable.icon_pdffile)
